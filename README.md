@@ -1,4 +1,4 @@
-# assignment4-CS
+# Assignment 4 (Conner Smith)
 
 This repository holds an exoloratory report of juvenile snowshoe hares in Bonanza Creek Experimental Forest. Bonanza Creek LTER is part of the US Long Term Ecological Research Network. The data includes information from 1998 to 2012. 
 
