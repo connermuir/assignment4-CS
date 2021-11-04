@@ -7,6 +7,7 @@ output:
     toc: yes
     toc_depth: 2
     theme: flatly
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
@@ -15,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 # Attach packages.
 library(tidyverse)
 library(here)
+library(lubridate)
 library(janitor)
 library(kableExtra)
 library(equatiomatic)
@@ -33,9 +35,36 @@ hares <- read_csv(here("data", "bonanza_hares.csv"))
   
 ```
 
-# **Data and Analysis**
+# **Data and Methods**
 
 A 3 - 4 sentence section in which you briefly describe the data, including citation & credit as needed, and provide an overview of the main analysis, statistical methods and tools used.
 
 ## **Initial Investigation**
 
+This section includes a summary of the hare count by year.
+
+#### **Figure 1: Count of Bonanza LTER Snowshoe Hare Trappings by Year**
+
+```{r}
+# Count the total number of juvenile hare trappings (`summarize()` during each year of the study (`group_by()`), and create a finalized data visualization of the counts by year.
+
+hares_clean <- hares %>% 
+  mutate(date_new = mdy(date)) %>%
+  mutate(year = year(date_new)) %>% 
+  group_by(year)
+
+ggplot(data = hares_clean, aes(x = year)) +
+  geom_histogram(fill = "slategray2",
+                 show.legend = FALSE) +
+  theme_bw() +
+  labs(x = "Year", y = "Count of Hare Trappings", 
+       title = "Count of Bonanza LTER Snowshoe Hare Trappings (1998-2012)")
+
+```
+
+**Figure 1: Count of Bonanza LTER Snowshoe Hare Trappings by Year.** *This graph shows the spread of Snowshoe Hare trappings at the Bonanza site between 1998 and 2012.*
+
+What were the minimum and maximum counts of juvenile hare trappings?
+Mean or median annual number of juvenile hares trapped?
+General/notable trends?
+These are absolute counts, but this count is also impacted by effort (e.g. the number of days and number of traps in the study each year). What would you suggest be done moving forward (you are not expected to actually do this) to standardize the juvenile hare population in future analyses?
