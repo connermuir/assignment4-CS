@@ -53,6 +53,10 @@ hares_clean <- hares %>%
   mutate(year = year(date_new)) %>% 
   group_by(year)
 
+hares_summary <- hares_clean %>% 
+  count(year) %>% 
+  rename(trappings = "n")
+  
 ggplot(data = hares_clean, aes(x = year)) +
   geom_histogram(fill = "slategray2",
                  show.legend = FALSE) +
@@ -60,11 +64,16 @@ ggplot(data = hares_clean, aes(x = year)) +
   labs(x = "Year", y = "Count of Hare Trappings", 
        title = "Count of Bonanza LTER Snowshoe Hare Trappings (1998-2012)")
 
+# Including calculation of mean/median values for the description without generating a summary table.
+
+mean(hares_summary$trappings)
+median(hares_summary$trappings)
+
 ```
 
 **Figure 1: Count of Bonanza LTER Snowshoe Hare Trappings by Year.** *This graph shows the spread of Snowshoe Hare trappings at the Bonanza site between 1998 and 2012.*
 
-What were the minimum and maximum counts of juvenile hare trappings?
-Mean or median annual number of juvenile hares trapped?
-General/notable trends?
+The fewest number of hares (38) were trapped in 2002 and the highest number (410) were trapped in 2009. The average annual hare trappings is around 213 across the 14 years of data. The median value is 179, which was recorded in 2006. Overall, trappings were highest around 2000 and between 2008 and 2011. 
+
+
 These are absolute counts, but this count is also impacted by effort (e.g. the number of days and number of traps in the study each year). What would you suggest be done moving forward (you are not expected to actually do this) to standardize the juvenile hare population in future analyses?
