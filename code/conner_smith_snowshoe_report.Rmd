@@ -11,5 +11,31 @@ output:
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+
+# Attach packages.
+library(tidyverse)
+library(here)
+library(janitor)
+library(kableExtra)
+library(equatiomatic)
 ```
+
+# **Introduction**
+
+This study explores population dynamics and characteristics of Snowshoe Hares measured at the Bonanza Creek Experimental Forest (Long Term Ecological Research site). The analysis looks at the counts and sizes of juvenile snowshoe hares recorded from 1998 - 2012 ... 
+
+*Data citation: Kielland, K., F.S. Chapin, R.W. Ruess, and Bonanza Creek LTER. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present ver 22. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14*
+
+```{r, include = FALSE}
+# Read in the snowshoe hare data 
+
+hares <- read_csv(here("data", "bonanza_hares.csv"))
+  
+```
+
+# **Data and Analysis**
+
+A 3 - 4 sentence section in which you briefly describe the data, including citation & credit as needed, and provide an overview of the main analysis, statistical methods and tools used.
+
+## **Initial Investigation**
 
