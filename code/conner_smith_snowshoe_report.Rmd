@@ -19,7 +19,7 @@ library(here)
 library(lubridate)
 library(janitor)
 library(kableExtra)
-library(equatiomatic)
+library(broom)
 ```
 
 # **Introduction**
@@ -102,6 +102,7 @@ ggplot(data = juvenile_weight, aes(x = sex, y = weight)) +
   labs(x = "Sex", y = "Weight (grams)", 
        title = "Juvenile Hare Weight by Sex and Site")
 ```
+
 **Figure 2: Weigh of Bonanza LTER Juvenile Snowshoe Hares by Site.** *This graph shows the weight distribution of snowshoe Hare trappings at different site types broken out by hare sex.*
 
 
@@ -125,9 +126,45 @@ kable(col.names = c("Site",
                     "Median Size (g)",
                     "Standard Deviation (g)"), digits = 2) %>% 
   kable_styling(full_width = FALSE)
+
 ```
 
+Then, in 2 - 3 sentences below your visualization(s) describe in text the main takeaways that you would want the audience to understand from your figures.
+
+A 2 - 3 sentence comprehensive statement of the means comparison, including at least:
+The actual difference in means
+Effect size (Cohen's *d*) (see effsize::cohen.d() example in the Lab 5 key)
+Outcome of an unpaired two-sample t-test
+
+#### **Figure 3: Weigh and Hind Foot Length of Bonanza LTER Juvenile Snowshoe Hares**
 
 ```{r}
+# Explore the relationship between juvenile snowshoe hare hind foot length (variable `hindft`, recorded in millimeters), and weight.
+
+hare_foot <- hares_juvenile %>% 
+  select(hindft, weight)
+
+ggplot(data = hare_foot, aes(x = weight, y = hindft)) +
+  geom_point(color = "slategray3") +
+  geom_smooth(method = "lm") +
+  theme_bw() +
+  labs(x = "Weight (g)", y = "Hind Foot Length (mm)",
+       title = "Snowshoe Hare Foot Length by Weight")
+  
 ```
 
+**Figure 3: Weigh and Hind Foot Length of Bonanza LTER Juvenile Snowshoe Hares.** *This graph shows the relationship between weight and hind foot length of snowshoe hares. The graph includes a simple line of best fit assuming a linear relationship between weight and foot length.*
+
+```{r}
+hares_lm <- lm(weight ~ hindft, data = hare_foot)
+
+hares_lm_tidy <- tidy(hares_lm)
+
+hares_lm_glance <- glance(hares_lm)
+```
+
+In 2 - 3 sentences below your figure, describe the outcome of your linear regression exploration (e.g. slope interpretation, R2 value, and Pearson's r correlation) and touch briefly on which assumption(s) of linear regression may be a concern, and additional thoughts you have about how well (or not well…) the linear model describes the relationship. What worries you?
+
+# **Summary**
+
+# **Citations**
