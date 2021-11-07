@@ -104,23 +104,22 @@ ggplot(data = juvenile_weight, aes(x = sex, y = weight)) +
 
 **Figure 2: Weigh of Bonanza LTER Juvenile Snowshoe Hares by Site.** *This graph shows the weight distribution of Snowshoe Hare trappings at different site types broken out by hare sex.*
 
-Figure 2 shows that more hares were trapped at the Bonanza Riparian site compared to the Bonanza Black Spruce and Mature sites. It also shows that  overall, the weight differences between juvenile males and female appears to be minimal. The table below provides summary statistics of this data. 
+Figure 2 shows that more hares were trapped at the Bonanza Riparian site compared to the Bonanza Black Spruce and Mature sites. It also shows that  overall, the weight differences between juvenile males and female appears to be minimal. The table below provides summary statistics of this data . 
 
 **Table 1: Summary Statistics of Bonanza Hare Weight.** *This table shows summary statistics for hare weights based on trap site and sex.*
 
 ```{r}
-# Creating a summary table comparing juvenile weights by sex and site using `kable()`. 
+# Creating a summary table comparing juvenile weights by sex using `kable()`. 
 
 juvenile_stats <- juvenile_weight %>% 
-  group_by(grid, sex) %>% 
+  group_by(sex) %>% 
   summarize(trappings = n(),
             mean_weight = mean(weight, na.rm = TRUE),
             median_weight = median(weight, na.rm = TRUE),
             sd_weight = sd(weight, na.rm = TRUE)) 
 
 juvenile_stats %>% 
-kable(col.names = c("Site", 
-                    "Sex",
+kable(col.names = c("Sex",
                     "Trappings",
                     "Mean Weights (g)",
                     "Median Size (g)",
@@ -128,6 +127,7 @@ kable(col.names = c("Site",
   kable_styling(full_width = FALSE)
 
 ```
+The difference in means between the juvenile and male rabbits 
 
 A 2 - 3 sentence comprehensive statement of the means comparison, including at least:
 The actual difference in means
