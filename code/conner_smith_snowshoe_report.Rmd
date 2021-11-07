@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 library(tidyverse)
 library(here)
 library(lubridate)
+library(ggbeeswarm)
 library(janitor)
 library(kableExtra)
 library(broom)
@@ -60,8 +61,9 @@ juvenile_summary <- hares_juvenile %>%
   
 ggplot(data = hares_juvenile, aes(x = year)) +
   geom_histogram(fill = "slategray2",
-                 show.legend = FALSE) +
+                 show.legend = FALSE, binwidth = 0.5) +
   theme_bw() +
+  scale_x_continuous(breaks = 1998:2012)+
   labs(x = "Year", y = "Count of Trappings", 
        title = "Juvenile Snowshoe Hare Trappings (1998-2012)")
 
@@ -69,20 +71,17 @@ ggplot(data = hares_juvenile, aes(x = year)) +
 
 juvenile_mean <- mean(juvenile_summary$trappings)
 juvenile_median <- median(juvenile_summary$trappings)
-
+juvenile_max <- max(juvenile_summary$trappings)
 ```
 
-**Figure 1: Count of Bonanza LTER Juvenile Snowshoe Hare Trappings by Year.** *This graph shows the spread of Snowshoe Hare trappings at the Bonanza site between 1998 and 2012.*
+**Figure 1: Count of Bonanza LTER Juvenile Snowshoe Hare Trappings by Year.** *This graph shows the spread of juvenile Snowshoe Hare trappings at the Bonanza site between 1998 and 2012.*
 
-The fewest number of juvenile hares (38) were trapped in 2002 and the highest number (410) were trapped in 2009. The average annual hare trappings is around `r round(juvenile_mean)` across the 12 years where juvenile hares were trapped (Note: this calculation does not include the years where no juvenile hares were trapped). The median value is `r round(juvenile_median)`, which falls across two years (2003 and 2011). trappings were highest around 2000 and between 2008 and 2011. There could be several reasons for the fluctuations in trappings, including shifts in the population dynamics which are mentioned in the metadata.  
-
-
-These are absolute counts, but this count is also impacted by effort (e.g. the number of days and number of traps in the study each year). What would you suggest be done moving forward (you are not expected to actually do this) to standardize the juvenile hare population in future analyses?
+The fewest number of juvenile hares (2) were trapped in 2010 and the highest number (126) were trapped in 2009. The average annual hare trappings is around `r round(juvenile_mean)` across the 12 years where juvenile hares were trapped (Note: this calculation does not include the years where no juvenile hares were trapped: 1998; 2002; 2009). The median value is `r round(juvenile_median)`, which falls across two years (2003 and 2011). trappings were highest between 1999 and 2000. This shows an overall decline in the number of juvenile hares trapped at the research site. In order to more confidently assert that this represents an actual decline in the juvenile hare population, the number of traps and time spent trapping would have to be standardized across all study years and sites.
 
 #### **Figure 2: Weight Distribution of Bonanza LTER Juvenile Snowshoe Hares by Site**
 
 ```{r}
-# Compare juvenile hare weights by sex and site (grid), include groups where these variables are not recorded (`NA`).
+# Compare juvenile hare weights by sex and site (grid), include groups where these variables are not recorded (`NA`). Using a jitter plot to show these comparisons. 
 
 juvenile_weight <- hares_juvenile %>% 
   select(grid, sex, weight) %>% 
@@ -103,13 +102,14 @@ ggplot(data = juvenile_weight, aes(x = sex, y = weight)) +
        title = "Juvenile Hare Weight by Sex and Site")
 ```
 
-**Figure 2: Weigh of Bonanza LTER Juvenile Snowshoe Hares by Site.** *This graph shows the weight distribution of snowshoe Hare trappings at different site types broken out by hare sex.*
+**Figure 2: Weigh of Bonanza LTER Juvenile Snowshoe Hares by Site.** *This graph shows the weight distribution of Snowshoe Hare trappings at different site types broken out by hare sex.*
 
+Figure 2 shows that more hares were trapped at the Bonanza Riparian site compared to the Bonanza Black Spruce and Mature sites. It also shows that  overall, the weight differences between juvenile males and female appears to be minimal. The table below provides summary statistics of this data. 
 
 **Table 1: Summary Statistics of Bonanza Hare Weight.** *This table shows summary statistics for hare weights based on trap site and sex.*
 
 ```{r}
-# Creating a summary table 
+# Creating a summary table comparing juvenile weights by sex and site using `kable()`. 
 
 juvenile_stats <- juvenile_weight %>% 
   group_by(grid, sex) %>% 
@@ -128,8 +128,6 @@ kable(col.names = c("Site",
   kable_styling(full_width = FALSE)
 
 ```
-
-Then, in 2 - 3 sentences below your visualization(s) describe in text the main takeaways that you would want the audience to understand from your figures.
 
 A 2 - 3 sentence comprehensive statement of the means comparison, including at least:
 The actual difference in means
