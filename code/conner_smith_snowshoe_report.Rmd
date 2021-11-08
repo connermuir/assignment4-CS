@@ -208,6 +208,8 @@ hares_lm <- lm(weight ~ hindft, data = hare_foot)
 hares_lm_tidy <- tidy(hares_lm)
 
 hares_lm_glance <- glance(hares_lm)
+
+hares_pearson <- cor.test(hare_foot$weight, hare_foot$hindft, method = "pearson", use = "complete.obs")
 ```
 
 ```{r}
@@ -216,7 +218,7 @@ hares_lm_glance <- glance(hares_lm)
 extract_eq(model = hares_lm, use_coefs = TRUE)
 ```
 
-This equation shows that the model anticipates an increase of `r round(hares_lm$coefficients[2], 2)` gram increase in hare weight for every millimeter increase in hind foot length. The model has an $R^2$ value of `r round(hares_lm_glance[1, "r.squared"], 3)`. This means that `r round(hares_lm_glance[1, "r.squared"], 3)*100` percent of the variance in the dependent variable (weight) is predictable from the independent variable (hind foot length). This provides further indication of earlier concerns that a simple linear regression does not explain the relationship between these variables very closely. Looking at the shape of the data in Figure 3 above, it is reasonable to think that a model with a slightly logarithmic curve could more accurately capture the relationship between Snowsheo Hare weight and foot length. 
+This equation shows that the model anticipates an increase of `r round(hares_lm$coefficients[2], 2)` millimeter increase in hare hind foot length for every gram increase in weight. The model has an $R^2$ value of `r round(hares_lm_glance[1, "r.squared"], 3)`. This means that `r round(hares_lm_glance[1, "r.squared"], 3)*100` percent of the variance in the dependent variable (hind foot length) is explained from the independent variable (weight). The Pearson's R value associated with this model is `r round(hares_pearson$estimate, 2)`, indicating a significant but not overwhelmingly strong correlation between these two variables. This provides further indication of earlier concerns that a simple linear regression does not provide a complete explain the relationship between hare weight and hind foot length. Looking at the shape of the data in Figure 3 above, it is reasonable to think that a model with a slightly logarithmic curve could more accurately capture the relationship between Snowshoe Hare weight and foot length. 
 
 Pearson's r? 
 
