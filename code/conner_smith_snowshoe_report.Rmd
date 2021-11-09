@@ -13,11 +13,11 @@ output:
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
-# Attach packages.
+# Attach packages. Hiding the code chunk from the knitted document. 
+
 library(tidyverse)
 library(here)
 library(lubridate)
-library(ggbeeswarm)
 library(janitor)
 library(kableExtra)
 library(broom)
@@ -25,24 +25,22 @@ library(effsize)
 library(equatiomatic)
 ```
 
-# **Introduction**
+# **1. Introduction**
 
-This study explores population dynamics and characteristics of Snowshoe Hares measured at the Bonanza Creek Experimental Forest (Long Term Ecological Research site). The analysis looks at the counts and sizes of juvenile snowshoe hares recorded from 1998 - 2012 ... 
-
-*Data citation: Kielland, K., F.S. Chapin, R.W. Ruess, and Bonanza Creek LTER. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present ver 22. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14*
+This study explores population dynamics and characteristics of Snowshoe Hares measured at the Bonanza Creek Experimental Forest Long Term Ecological Research site. The analysis looks at the counts and sizes of juvenile snowshoe hares recorded from 1998 - 2012 (Keilland et al. 2017). Hares were trapped across three different experimental sites featuring a range of different ecological characteristics. This report looks specifically at the number of juvenile hares trapped over the study period and compares the relationship between study variable including weight, sex, and hind foot length. The analysis includes several tests to classify differences between subsets in this sample. 
 
 ```{r, include = FALSE}
-# Read in the snowshoe hare data 
+# Read in the snowshoe hare data, hiding the code chink from the knitted document. 
 
 hares <- read_csv(here("data", "bonanza_hares.csv"))
   
 ```
 
-# **Data and Methods**
+# **2. Data and Methods**
 
-A 3 - 4 sentence section in which you briefly describe the data, including citation & credit as needed, and provide an overview of the main analysis, statistical methods and tools used.
+This data was made available by researchers working at the Bonanza Creek LTER, a partnership between the University of Alaska Fairbanks, and the U.S. Forest Service (Keilland et al. 2017). The data contain 3,197 observations recorded between 1998 and 2012. These data are visualized throughout the report and weights for juvenile hares are compared for both sexes using a two-sample t-tests using a significance level ($\alpha$) of 0.05 throughout. Differences between groups are described by Cohen's *d* effect size. The relationship between hare weight and hind foot length is explored using a simple linear regression. All analyses are in R version 4.1.1 using RStudio version 2021.09.1+372.  
 
-# **Juvenile Hare Trapping Summary**
+# **3. Juvenile Hare Trapping Summary**
 
 This section includes a summary of the hare count by year.
 
@@ -91,7 +89,7 @@ This section looks for differences in juvenile hare wights across the three stud
 
 juvenile_weight <- hares_juvenile %>% 
   select(grid, sex, weight) %>% 
-  mutate(grid = case_when(grid == "bonbs" ~ "Bonanza Black Spruce",
+  mutate(grid = case_when(grid == "bonbs" ~ "Lowland Black Spruce",
                                grid == "bonmat" ~ "Bonanza Mature",
                                grid == "bonrip" ~ "Bonanza Riparian")) %>%
   mutate(sex = case_when(sex == "f" ~ "Female",
@@ -130,7 +128,7 @@ kable(col.names = c("Sex",
                     "Mean Weights (g)",
                     "Median Size (g)",
                     "Standard Deviation (g)"), digits = 2) %>% 
-  kable_styling(full_width = FALSE)
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 
 ```
 
