@@ -42,12 +42,12 @@ This data was made available by researchers working at the Bonanza Creek LTER, a
 
 # **3. Juvenile Hare Trapping Summary**
 
-This section includes a summary of the hare count by year.
+This section includes a summary of the juvenile hare trappings by year. Trappings varied significantly over the study period and are visualized in **Figure 1** below. 
 
-#### **Figure 1: Count of Bonanza LTER Juvenile Snowshoe Hare Trappings by Year**
+#### **Figure 1: Count of Bonanza LTER Juvenile Snowshoe Hare Trappings by Year (1998-2012)**
 
 ```{r}
-# Count the total number of juvenile hare trappings (`summarize()` during each year of the study (`group_by()`), and create a finalized data visualization of the counts by year.
+# Filter the data to account for only juvenile hares and use `lubridate:: mdy() to clean the dates to allow year to be separated. Then Count the total number of juvenile hare trappings `count()` during each year of the study with `group_by()`.
 
 hares_juvenile <- hares %>% 
   filter(age == "j") %>% 
@@ -58,34 +58,41 @@ hares_juvenile <- hares %>%
 juvenile_summary <- hares_juvenile %>% 
   count(year) %>% 
   rename(trappings = "n")
+
+# Create a finalized data visualization of the counts by year with `geom_histogram()`.
   
 ggplot(data = hares_juvenile, aes(x = year)) +
   geom_histogram(fill = "slategray2",
                  show.legend = FALSE, binwidth = 0.5) +
   theme_bw() +
   scale_x_continuous(breaks = 1998:2012)+
-  labs(x = "Year", y = "Count of Trappings", 
-       title = "Juvenile Snowshoe Hare Trappings (1998-2012)")
+  labs(x = "Year", y = "Count of Trappings")
+```
 
-# Including calculation of mean/median values for the description without generating a summary table.
+
+```{r, include=FALSE}
+# Including calculation of mean/median values for the description without generating a summary table. Hide from knitted document. 
 
 juvenile_mean <- mean(juvenile_summary$trappings)
 juvenile_median <- median(juvenile_summary$trappings)
 juvenile_max <- max(juvenile_summary$trappings)
+juvenile_min <- min(juvenile_summary$trappings)
+
 ```
 
-**Figure 1: Count of Bonanza LTER Juvenile Snowshoe Hare Trappings by Year.** *This graph shows the spread of juvenile Snowshoe Hare trappings at the Bonanza site between 1998 and 2012.*
 
-The fewest number of juvenile hares (2) were trapped in 2010 and the highest number (126) were trapped in 2009. The average annual hare trappings is around `r round(juvenile_mean)` across the 12 years where juvenile hares were trapped (Note: this calculation does not include the years where no juvenile hares were trapped: 1998; 2002; 2009). The median value is `r round(juvenile_median)`, which falls across two years (2003 and 2011). trappings were highest between 1999 and 2000. This shows an overall decline in the number of juvenile hares trapped at the research site. In order to more confidently assert that this represents an actual decline in the juvenile hare population, the number of traps and time spent trapping would have to be standardized across all study years and sites. If this was not possible for some reason, researchers could use the existing data and create weightings based on number of traps and time spent so years where trapping activity was less are not leading to skewed results. 
+##### **Figure 1:** *This graph shows the spread of juvenile Snowshoe Hare trappings at the Bonanza LTER between 1998 and 2012. There were no trappings recorded in 1998, 2002, and 2009. Data: Keilland et al. (2017).*
 
-# **Juvenile Hare Weight Analysis by Sex and Site**
+The fewest number of juvenile hares (`r juvenile_min`) were trapped in 2010 and the highest number (`r juvenile_max`) were trapped in 1999. The average annual hare trappings is around `r round(juvenile_mean)` across the 12 years where juvenile hares were trapped. The median value is `r juvenile_median`, which falls across two years (2003 and 2011). The figure shows an overall decline in the number of juvenile hares trapped at the research site. In order to more confidently assert that this represents an actual decline in the juvenile hare population, the number of traps and time spent trapping would have to be standardized across all study years and sites. If this was not possible for some reason, researchers could use the existing data and create weightings based on number of traps and time spent so years where trapping activity was less are not leading to skewed results. 
 
-This section looks for differences in juvenile hare wights across the three study sites and 
+# **4. Juvenile Hare Weight Analysis by Sex and Site**
 
-#### **Figure 2: Weight Distribution of Bonanza LTER Juvenile Snowshoe Hares by Site**
+This section looks for differences in juvenile hare wights across the three study sites and compares the differences by sex. It includes a summary figure, table, and analysis using an unpaired, two-sample t-test. 
+
+#### **Figure 2: Weight Distribution of Bonanza LTER Juvenile Snowshoe Hares by Site and Sex**
 
 ```{r}
-# Compare juvenile hare weights by sex and site (grid), include groups where these variables are not recorded (`NA`). Using a jitter plot to show these comparisons. 
+# Compare juvenile hare weights by sex and site (grid), include entries where sex was not recorded (`NA`). Using a jitter plot to show these comparisons. 
 
 juvenile_weight <- hares_juvenile %>% 
   select(grid, sex, weight) %>% 
@@ -102,15 +109,14 @@ ggplot(data = juvenile_weight, aes(x = sex, y = weight)) +
                                "slateblue3", 
                                "slategray3")) +
   theme_bw() +
-  labs(x = "Sex", y = "Weight (grams)", 
-       title = "Juvenile Hare Weight by Sex and Site")
+  labs(x = "Sex", y = "Weight (grams)")
 ```
 
-**Figure 2: Weigh of Bonanza LTER Juvenile Snowshoe Hares by Site.** *This graph shows the weight distribution of Snowshoe Hare trappings at different site types broken out by hare sex.*
+##### **Figure 2:** *This graph shows the weight distribution of Snowshoe Hare trappings at different site types broken out by hare sex. Entries where sex was not recorded are included as "NA". Data: Keilland et al. (2017).*
 
-Figure 2 shows that more hares were trapped at the Bonanza Riparian site compared to the Bonanza Black Spruce and Mature sites. It also shows that  overall, the weight differences between juvenile males and female appears to be minimal. The table below provides summary statistics of this data . 
+**Figure 2** shows that more hares were trapped at the Bonanza Riparian site compared to the Bonanza Black Spruce and Mature sites. It also shows that  the weight differences between juvenile males and female appears to favor males, but the overall difference is minimal. **Table 1** below provides summary statistics of this data . 
 
-**Table 1: Summary Statistics of Bonanza Hare Weight.** *This table shows summary statistics for hare weights based on trap site and sex.*
+**Table 1: Summary Statistics of Bonanza Hare Weight by Sex.** *This table shows summary statistics for hare weights based on trap site and sex. It includes the mean and median values for "NA" entries. Data: Keilland et al. (2017).*
 
 ```{r}
 # Creating a summary table comparing juvenile weights by sex using `kable()`. 
@@ -133,11 +139,13 @@ kable(col.names = c("Sex",
 ```
 
 ```{r, include = FALSE}
-# Including some exploration of the differences in data including effect size (Cohen's D) and an unpaired, two-sample t-test. 
+# Including some exploration of the differences in data including effect size (Cohen's D) and an unpaired, two-sample t-test. Not including this chunk in the knitted document. 
 
 mean_diff <- juvenile_stats[2, "mean_weight"] - juvenile_stats[1, "mean_weight"] 
 
 mean_percent <- mean_diff / juvenile_stats[2, "mean_weight"]
+
+combined_sample <- juvenile_stats$trappings[1] + juvenile_stats$trappings[2]
 
 # Include exploratory QQ plots to determine if t-tests are appropriate for this data.
 
@@ -149,9 +157,13 @@ ggplot(data = juvenile_weight, aes(x = weight)) +
   geom_histogram() +
   facet_wrap(~ sex)
 
-# There is nothing substantial in these graphs that leads me to think that a t-test is not appropriate. 
+# There is no substantial indication in these graphs that leads me to think that a t-test is not appropriate. The central limit theorem can help explain this. 
 
-# Run the t test and Cohen's d 
+```
+
+
+```{r}
+# Run the t test and Cohen's d, including this as a code fold in the knitted document. 
 
 juvenile_male <- juvenile_weight %>% 
   filter(sex == "Male") %>% 
@@ -163,21 +175,20 @@ juvenile_female <- juvenile_weight %>%
 
 hare_t <- t.test(juvenile_male, juvenile_female, na.rm = TRUE)
 
-hare_t
-
 hare_cohen <- cohen.d(juvenile_male, juvenile_female, na.rm = TRUE)
-
-hare_cohen
-
 ```
 
-The difference in means between the juvenile male and female rabbits is `r round(mean_diff, 2)` grams (or a 'r . The p-value of `r hare_t$p.value` means that there is a `r round(hare_t$p.value, 3)*100` percent chance of finding sample means that are at least as different as the ones shown in the Bonanza samples from two other random samples if they were drawn from populations with the same mean weight. This shows there is a significant difference in the means. The relatively small effect size (Cohen's *d* = `r round(hare_cohen$estimate,2)`) shows that while the means differ, the size of the difference is not very large. 
+A closer look at the hare weight distribution by sex does not provide sufficient indication to conclude that the data are not normally distributed. This is in part due to the relatively large sample size (`r combined_sample`). Weights for juvenile male hares do not appear to follow a normal distribution closely, but this could be explained by a limited sample resulting from inconsistencies in trapping and study design.
 
-# **Juvenile Hare Weight and Foot Comparisons** 
+The mean weight for juvenile male hares (`r round(juvenile_stats$mean_weight[2], 2)` $\pm$ `r round(juvenile_stats$sd_weight[2], 2)` grams, *n* = `r juvenile_stats$trappings[2]`; mean $\pm$ 1 standard deviation) is slightly larger than that for females (`r round(juvenile_stats$mean_weight[1], 2)` $\pm$ `r round(juvenile_stats$sd_weight[1], 2)` grams, *n* = `r juvenile_stats$trappings[1]`; mean $\pm$ 1 standard deviation). 
 
-This section explores the relationship between juvenile hare wight and foot lengths. 
+This gives an absolute difference in means between the juvenile male and female rabbits of `r round(mean_diff, 2)` grams (or a `r round(mean_percent,3)*100` percent difference). The difference is mean weight between the male and female hares included in this sample is significant (two-sample t-test: t(`r round(hare_t$parameter,2)`= `r round(hare_t$statistic,2)`, p = `r round(hare_t$p.value,3)`). However, the effect size is relatively small (Cohen's *d* = `r round(hare_cohen$estimate,2)`). 
 
-#### **Figure 3: Weigh and Hind Foot Length of Bonanza LTER Juvenile Snowshoe Hares**
+# **5. Juvenile Hare Weight and Foot Comparisons** 
+
+This section explores the relationship between juvenile hare wight and foot lengths. It includes a simple linear regression and analysis of whether this is an appropriate method to use for these data. 
+
+#### **Figure 3: Weight and Hind Foot Length of Bonanza LTER Juvenile Snowshoe Hares**
 
 ```{r}
 # Explore the relationship between juvenile snowshoe hare hind foot length (variable `hindft`, recorded in millimeters), and weight.
@@ -189,17 +200,12 @@ ggplot(data = hare_foot, aes(x = weight, y = hindft)) +
   geom_point(color = "slategray3") +
   geom_smooth(method = "lm") +
   theme_bw() +
-  labs(x = "Weight (g)", y = "Hind Foot Length (mm)",
-       title = "Snowshoe Hare Foot Length by Weight")
+  labs(x = "Weight (g)", y = "Hind Foot Length (mm)")
   
 ```
 
-**Figure 3: Weigh and Hind Foot Length of Bonanza LTER Juvenile Snowshoe Hares.** *This graph shows the relationship between weight and hind foot length of snowshoe hares. The graph includes a simple line of best fit assuming a linear relationship between weight and foot length.*
-
-The line of best fit included in Figure 3 shows that these data may not be best described by a linear relationship. The following equation shows the coefficients associated with this model:
-
 ```{r, include=FALSE}
-# Calculate the coefficients of this model 
+# Generating clean data frames showing the coefficients of this model, as well as the r squared and Pearson's r value. Not including the code chunk in the knitted document. 
 
 hares_lm <- lm(weight ~ hindft, data = hare_foot)
 
@@ -210,17 +216,20 @@ hares_lm_glance <- glance(hares_lm)
 hares_pearson <- cor.test(hare_foot$weight, hare_foot$hindft, method = "pearson", use = "complete.obs")
 ```
 
+##### **Figure 3:** *This graph shows the relationship between weight (g) and hind foot length (mm) of snowshoe hares. The graph includes a simple line of best fit assuming a linear relationship between weight and foot length* ($\beta$~1~ = `r round(hares_lm_tidy$estimate[2], 2)` g mm^-1^, p <0.001, $R^2$ = `r round(hares_lm_glance$r.squared[1], 2)`, Pearson's *r* = `r round(hares_pearson$estimate, 2)`). *Data: Keilland et al. (2017).*
+
+The simple linear regression included in **Figure 3** shows that these data may not be best described by a linear relationship. Other variable (such as sex) should also be included in the development of predictive models. The following equation shows the equation associated with this simple linear model:
 ```{r}
-# Use equatiomatic:: extract() to generate an equation. 
+# Use `equatiomatic:: extract()` to generate an equation. 
 
 extract_eq(model = hares_lm, use_coefs = TRUE)
 ```
 
-This equation shows that the model anticipates an increase of `r round(hares_lm$coefficients[2], 2)` millimeter increase in hare hind foot length for every gram increase in weight. The model has an $R^2$ value of `r round(hares_lm_glance[1, "r.squared"], 3)`. This means that `r round(hares_lm_glance[1, "r.squared"], 3)*100` percent of the variance in the dependent variable (hind foot length) is explained from the independent variable (weight). The Pearson's R value associated with this model is `r round(hares_pearson$estimate, 2)`, indicating a significant but not overwhelmingly strong correlation between these two variables. This provides further indication of earlier concerns that a simple linear regression does not provide a complete explain the relationship between hare weight and hind foot length. Looking at the shape of the data in Figure 3 above, it is reasonable to think that a model with a slightly logarithmic curve could more accurately capture the relationship between Snowshoe Hare weight and foot length. 
+Simple linear regression shows that the relationship between hare weight and hind foot length is not completely linear. The model predicts an increase of `r round(hares_lm$coefficients[2], 2)` millimeter increase in hare hind foot length for every gram increase in weight. This model does not significantly predict hare hind foot length from weight (p <0.001, $R^2$ = `r round(hares_lm_glance$r.squared[1], 2)`). This means that simple linear regression only predicts `r round(hares_lm_glance$r.squared[1], 3)*100` percent of the variance in the dependent variable (hind foot length) from the independent variable (weight). Hare weight and hind foot length are significantly, but not strongly correlated (Pearson's *r* = `r round(hares_pearson$estimate, 2)`, p < 0.001). 
 
-Pearson's r? 
+This provides further indication of earlier concerns that a simple linear regression does not provide a complete explain the relationship between hare weight and hind foot length. Looking at the shape of the data in **Figure 3** above, it is reasonable to think that a different model (i.e. one with a slightly logarithmic curve) or a model that incorporates more variables could more accurately capture the relationship between Snowshoe Hare weight and foot length. 
 
-# **Summary**
+# **6. Summary**
 
 The key takeaways from this analysis can be summarized as follows: 
 
@@ -228,10 +237,63 @@ The key takeaways from this analysis can be summarized as follows:
 
 - The most juvenile hares were trapped at the Bonanza Riparian site. 
 
-- The actual difference in mean weights between male and female juvenile hares is `r round(mean_diff, 2)` grams. This difference is significant, although the size of this difference is not large (Cohen's *d* = `r round(hare_cohen$estimate,2)`). 
+- The actual difference in mean weights between male and female juvenile hares is `r round(mean_diff, 2)` grams. This difference is significant, although the effect size is not large (Cohen's *d* = `r round(hare_cohen$estimate,2)`). 
 
-- The relationship between hare weight and hindfoot length is not best described by a simple linear regression. Under a linear regression, hind foot length could only explain `r round(hares_lm_glance[1, "r.squared"], 3)*100` percent of the variance in weight. A different type of model is likely more appropriate to understand this relationship. 
+- The relationship between hare weight and hindfoot length is not best described by a simple linear regression. Under a linear regression, only `r round(hares_lm_glance[1, "r.squared"], 3)*100` percent of the variance in hind foot length is predictable from hare weight. Hare weight and hind foot length are significantly, but not strongly correlated (Pearson's *r* = `r round(hares_pearson$estimate, 2)`. This indicates that a different type of model is likely more appropriate to understand this relationship. 
 
-# **Citations**
+Possible next steps in this analysis could be:
 
-*Kielland, K., F.S. Chapin, R.W. Ruess, and Bonanza Creek LTER. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present ver 22. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14*
+- Standardizing the inconsistencies in the data across study years. 
+
+- Generating a new model that explains a higher percentage of the variance in hind foot length as a function of weight. 
+
+# **7. Citations**
+
+- Kielland, K., F.S. Chapin, R.W. Ruess, and Bonanza Creek LTER. 2017.        Snowshoe hare physical data in Bonanza Creek Experimental Forest:           1999-Present ver 22. Environmental Data Initiative.                         https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14*
+
+
+```{r, include = FALSE}
+citation(package = "tidyverse")
+citation(package = "here")
+citation(package = "lubridate")
+citation(package = "janitor")
+citation(package = "kableExtra")
+citation(package = "broom")
+citation(package = "effsize")
+citation(package = "equatiomatic")
+
+```
+
+
+- Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source    Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+
+- Kirill Müller (2020). here: A Simpler Way to Find Your
+  Files. R package version 1.0.1.
+  https://CRAN.R-project.org/package=here
+  
+- Garrett Grolemund, Hadley Wickham (2011). Dates and Times
+  Made Easy with lubridate. Journal of Statistical Software,
+  40(3), 1-25. URL https://www.jstatsoft.org/v40/i03/.
+  
+- Sam Firke (2021). janitor: Simple Tools for Examining and
+  Cleaning Dirty Data. R package version 2.1.0.
+  https://CRAN.R-project.org/package=janitor
+  
+- Hao Zhu (2021). kableExtra: Construct Complex Table with
+  'kable' and Pipe Syntax. R package version 1.3.4.
+  https://CRAN.R-project.org/package=kableExtra
+  
+- David Robinson, Alex Hayes and Simon Couch (2021). broom:
+  Convert Statistical Objects into Tidy Tibbles. R package
+  version 0.7.9. https://CRAN.R-project.org/package=broom
+  
+- Torchiano M (2020). _effsize: Efficient Effect Size
+  Computation_. doi: 10.5281/zenodo.1480624 (URL:
+  https://doi.org/10.5281/zenodo.1480624), R package version
+  0.8.1, <URL: https://CRAN.R-project.org/package=effsize>.
+  
+- Daniel Anderson, Andrew Heiss and Jay Sumners (2021).
+  equatiomatic: Transform Models into 'LaTeX' Equations. R
+  package version 0.3.0.
+  https://CRAN.R-project.org/package=equatiomatic
+
